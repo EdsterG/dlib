@@ -944,5 +944,26 @@ namespace dlib
 
 // ----------------------------------------------------------------------------------------
 
+    void global_function_search::
+    add_function_evals (
+        const std::vector<function_evaluation>& function_evals,
+        size_t function_idx
+    )
+    {
+        auto info = functions[function_idx];
+        std::lock_guard<std::mutex> lock(*info->m);
+        for (auto& i : function_evals)
+        {
+            info->ub.add(i);
+            if (i.y > info->best_objective_value)
+            {
+                info->best_objective_value = i.y;
+                info->best_x = i.x;
+            }
+        }
+    }
+
+// ----------------------------------------------------------------------------------------
+
 }
 

@@ -210,6 +210,11 @@ namespace dlib
             size_t num
         );
 
+        void add_function_evals (
+            const std::vector<function_evaluation>& function_evals,
+            size_t function_idx
+        );
+
     private:
 
         std::shared_ptr<gopt_impl::funct_info> best_function(

@@ -261,6 +261,20 @@ function_evaluation py_function_evaluation(
     return function_evaluation(list_to_mat(x), y);
 }
 
+void py_add_function_evals(
+    global_function_search& self,
+    const py::list& function_evals,
+    size_t function_idx
+)
+{
+    DLIB_CASSERT(0 <= function_idx && function_idx < self.num_functions(), "Invalid function index provided.");
+    std::vector<function_evaluation> tmp;
+    for (const auto& i : function_evals)
+        tmp.emplace_back(i.cast<function_evaluation>());
+
+    self.add_function_evals(tmp, function_idx);
+}
+
 // ----------------------------------------------------------------------------------------
 
 void bind_global_optimization(py::module& m)
@@ -451,6 +465,7 @@ simply a struct that records x and the scalar value F(x). )RAW")
         .def("set_relative_noise_magnitude", &global_function_search::set_relative_noise_magnitude, py::arg("value"))
         .def("get_monte_carlo_upper_bound_sample_num", &global_function_search::get_monte_carlo_upper_bound_sample_num)
         .def("set_monte_carlo_upper_bound_sample_num", &global_function_search::set_monte_carlo_upper_bound_sample_num, py::arg("num"))
+        .def("add_function_evals", &py_add_function_evals, py::arg("function_evals"), py::arg("function_idx"))
         ;
 
 }
